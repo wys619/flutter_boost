@@ -41,9 +41,9 @@ public class ContainerRecord implements IContainerRecord {
 
     ContainerRecord(FlutterViewContainerManager manager, IFlutterViewContainer container) {
         final Map params = container.getContainerUrlParams();
-        if(params != null && params.containsKey(IContainerRecord.UNIQ_KEY)) {
+        if (params != null && params.containsKey(IContainerRecord.UNIQ_KEY)) {
             mUniqueId = String.valueOf(params.get(IContainerRecord.UNIQ_KEY));
-        }else{
+        } else {
             mUniqueId = genUniqueId(this);
         }
 
@@ -108,7 +108,7 @@ public class ContainerRecord implements IContainerRecord {
         mState = STATE_DISAPPEAR;
 
         mProxy.disappear();
-        if(getContainer().getContextActivity().isFinishing()) {
+        if (getContainer().getContextActivity().isFinishing()) {
             mProxy.destroy();
         }
 
@@ -121,9 +121,13 @@ public class ContainerRecord implements IContainerRecord {
     public void onDestroy() {
         Utils.assertCallOnMainThread();
 
-        if (mState != STATE_DISAPPEAR) {
-            Debuger.exception("state error");
+        if (mState == STATE_DESTROYED) {
+            return;
         }
+
+//        if (mState != STATE_DISAPPEAR) {
+//            Debuger.exception("state error");
+//        }
 
         mState = STATE_DESTROYED;
 
@@ -133,7 +137,7 @@ public class ContainerRecord implements IContainerRecord {
 
         mManager.removeRecord(this);
 
-        mManager.setContainerResult(this,-1,-1,null);
+        mManager.setContainerResult(this, -1, -1, null);
 
         if (!mManager.hasContainerAppear()) {
 //            mContainer.getBoostFlutterView().onPause();
@@ -176,7 +180,7 @@ public class ContainerRecord implements IContainerRecord {
 
     @Override
     public void onContainerResult(int requestCode, int resultCode, Map<String, Object> result) {
-        mManager.setContainerResult(this, requestCode,resultCode, result);
+        mManager.setContainerResult(this, requestCode, resultCode, result);
 
     }
 
