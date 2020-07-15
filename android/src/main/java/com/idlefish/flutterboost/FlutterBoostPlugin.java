@@ -227,10 +227,14 @@ public class FlutterBoostPlugin {
                         mManager.openContainer(url, params, exts, new FlutterViewContainerManager.DefaultOnResult(result) {
                             @Override
                             public void onResult(Map<String, Object> rlt) {
-                                if (getResult() != null) {
-                                    getResult().success(rlt);
+                                try {
+                                    if (getResult() != null) {
+                                        getResult().success(rlt);
+                                    }
+                                    setResult(null);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                                setResult(null);
                             }
                         });
                     } catch (Throwable t) {
